@@ -21,10 +21,6 @@
               },
               "type": "string"
             },
-            "pToken": {
-              "value": null,
-              "type": "string"
-            },
             "pDebugMode": {
               "value": {
                 "value": "@pipeline().parameters.pDebugMode",

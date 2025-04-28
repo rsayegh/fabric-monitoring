@@ -64,13 +64,18 @@ vWorkspaceId = vContext["currentWorkspaceId"] # where the notebook is running, t
 
 # **Parameters --> convert to code for debugging the notebook. otherwise, keep commented as parameters are passed from master notebook**
 
-# MARKDOWN ********************
+# CELL ********************
 
-# pLoadId = "1"
-# pConfiguration = '{"pConfigId":1,"pConfigName":"Initialization","pAuditLogTimeframeInMinutes":"60","pAllActivities":"no","pInitialization_Audit":"yes","pAuditLog":"yes","pLastProcessedDateAndTime_Audit":"2025-04-09 00:00:00","pkeyVaultName":"rs-kv-dev","pTenantId":"37800c96-90fb-411b-b068-4694b539e122","pDomainName":"MngEnvMCAP434897.onmicrosoft.com","pFabricSpnClientId":"32a31845-34d6-43b4-806c-0930619d5050","pFabricSpnSecretName":"FabricSpnSecret","pFabricSpnAdminConsentClientId":"636b5212-98d7-404f-96ea-2487556db673","pFabricSpnAdminConsentSecretName":"FabricSpnAdminConsentSecret","pAdmin":"admin@MngEnvMCAP434897.onmicrosoft.com","pAdminSecretName":"AdminSecret","pFabricSecurityGroupId":"6dbff53c-047a-4dda-a696-9f8ddd453288","pReloadDates":"yes","pStartDate":"2025-01-01","pEndDate":"2025-12-31","pInitialization_Inventory":"yes","pThrottleScanApi":"yes","pLastProcessedDateAndTime_Inventory":"1900-01-01 00:00:00","pTenantMetadata":"yes","pGatewayClusters":"yes","pInventory":"yes","pDatasetRefreshHistory":"yes","pTopNRefreshHistory":"0"}'
-# pToken = ""
-# pDebugMode = "yes"
+pLoadId = "1"
+pConfiguration = '{"pConfigId":1,"pConfigName":"Initialization","pAuditLogTimeframeInMinutes":"60","pAllActivities":"yes","pInitialization_Audit":"yes","pAuditLog":"yes","pLastProcessedDateAndTime_Audit":"2025-04-27 00:00:00","pReloadDates":"yes","pStartDate":"2025-01-01","pEndDate":"2025-12-31","pInitialization_Inventory":"yes","pThrottleScanApi":"yes","pLastProcessedDateAndTime_Inventory":"2025-04-27 00:00:00","pTenantMetadata":"yes","pGatewayClusters":"yes","pInventory":"yes","pDatasetRefreshHistory":"yes","pTopNRefreshHistory":"0"}'
+pDebugMode = "no"
 
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
 
 # MARKDOWN ********************
 
@@ -107,7 +112,7 @@ if pDebugMode == "yes":
     vSqlAccessToken = vAccessToken
 else:
     # when the code is run from the pipelines, to token is generated in a previous step and passed as a parameter to the notebook
-    vAccessToken = pToken 
+    vAccessToken = notebookutils.notebook.run("nb_authentication", 300)
 
 # METADATA ********************
 
