@@ -82,7 +82,7 @@ vWorkspaceId = vContext["currentWorkspaceId"]
 # pDebugMode = "yes"
 # pAuditLogTimeframeInMinutes = "120"
 # pAllActivities = 'yes'
-# pInitialization =   'no'
+# pInitialization =   'yes'
 # pDateAndTime = '2025-04-12 11:00:00'
 
 # MARKDOWN ********************
@@ -304,37 +304,37 @@ if pInitialization == "yes":
         vCurrentStartIso8601 = vCurrentStart.strftime('%Y-%m-%dT%H:%M:%S.')+'000Z'
         vCurrentEndIso8601 = vCurrentEnd.strftime('%Y-%m-%dT%H:%M:%S.')+'000Z'       
 
-        # set audit log url
-        vAuditLogUrl = (
-            f"admin/activityevents?"
-            f"startDateTime='{vCurrentStartIso8601}'&"
-            f"endDateTime='{vCurrentEndIso8601}'"
-        )
+        # # set audit log url
+        # vAuditLogUrl = (
+        #     f"admin/activityevents?"
+        #     f"startDateTime='{vCurrentStartIso8601}'&"
+        #     f"endDateTime='{vCurrentEndIso8601}'"
+        # )
 
-        # define the final url
-        vUrl = vBaseUrl + vAuditLogUrl
+        # # define the final url
+        # vUrl = vBaseUrl + vAuditLogUrl
 
-        try:
-            # start timer 
-            start = timer()
+        # try:
+        #     # start timer 
+        #     start = timer()
 
-            # run the extraction log function
-            extract_audit_logs(vUrl, vHeader, df_audit_log, audit_date)  
+        #     # run the extraction log function
+        #     extract_audit_logs(vUrl, vHeader, df_audit_log, audit_date)  
 
-            # logging
-            end = timer()
-            vElapsedTime = timedelta(seconds=end-start)
-            vMessage = f"extraction of <{audit_date}> succeeded"
-            dfLogging.loc[len(dfLogging.index)] = [pLoadId, vNotebookId, vLogNotebookName, vWorkspaceId, 'extraction of audit logs', datetime.now(), vElapsedTime, vMessage, ''] 
+        #     # logging
+        #     end = timer()
+        #     vElapsedTime = timedelta(seconds=end-start)
+        #     vMessage = f"extraction of <{audit_date}> succeeded"
+        #     dfLogging.loc[len(dfLogging.index)] = [pLoadId, vNotebookId, vLogNotebookName, vWorkspaceId, 'extraction of audit logs', datetime.now(), vElapsedTime, vMessage, ''] 
 
-        except Exception as e:
-            # logging
-            end = timer()
-            vElapsedTime = timedelta(seconds=end-start)
-            vMessage = f"extraction of <{audit_date}> failed"
-            dfLogging.loc[len(dfLogging.index)] = [pLoadId, vNotebookId, vLogNotebookName, vWorkspaceId, 'extraction of audit logs', datetime.now(), vElapsedTime, vMessage, str(e) ] 
-            if pDebugMode == "yes":
-                print(str(e))
+        # except Exception as e:
+        #     # logging
+        #     end = timer()
+        #     vElapsedTime = timedelta(seconds=end-start)
+        #     vMessage = f"extraction of <{audit_date}> failed"
+        #     dfLogging.loc[len(dfLogging.index)] = [pLoadId, vNotebookId, vLogNotebookName, vWorkspaceId, 'extraction of audit logs', datetime.now(), vElapsedTime, vMessage, str(e) ] 
+        #     if pDebugMode == "yes":
+        #         print(str(e))
 
 
 else:
@@ -354,38 +354,37 @@ else:
     vCurrentStartIso8601 = vCurrentStart.strftime('%Y-%m-%dT%H:%M:%S.')+'000Z'
     vCurrentEndIso8601 = vCurrentEnd.strftime('%Y-%m-%dT%H:%M:%S.')+'000Z'
 
+    # # set audit log url
+    # vAuditLogUrl = (
+    #     f"admin/activityevents?"
+    #     f"startDateTime='{vCurrentStartIso8601}'&"
+    #     f"endDateTime='{vCurrentEndIso8601}'"
+    # )
 
-    # set audit log url
-    vAuditLogUrl = (
-        f"admin/activityevents?"
-        f"startDateTime='{vCurrentStartIso8601}'&"
-        f"endDateTime='{vCurrentEndIso8601}'"
-    )
+    # # define the final url
+    # vUrl = vBaseUrl + vAuditLogUrl    
 
-    # define the final url
-    vUrl = vBaseUrl + vAuditLogUrl    
+    # try:
+    #     # start timer 
+    #     start = timer()
 
-    try:
-        # start timer 
-        start = timer()
+    #     # run the extraction log function
+    #     extract_audit_logs(vUrl, vHeader, df_audit_log, pDateAndTime)  
 
-        # run the extraction log function
-        extract_audit_logs(vUrl, vHeader, df_audit_log, pDateAndTime)  
+    #     # logging
+    #     end = timer()
+    #     vElapsedTime = timedelta(seconds=end-start)
+    #     vMessage = f"extraction of <{pDateAndTime}> succeeded"
+    #     dfLogging.loc[len(dfLogging.index)] = [pLoadId, vNotebookId, vLogNotebookName, vWorkspaceId, 'extraction of audit logs', datetime.now(), vElapsedTime, vMessage, ''] 
 
-        # logging
-        end = timer()
-        vElapsedTime = timedelta(seconds=end-start)
-        vMessage = f"extraction of <{pDateAndTime}> succeeded"
-        dfLogging.loc[len(dfLogging.index)] = [pLoadId, vNotebookId, vLogNotebookName, vWorkspaceId, 'extraction of audit logs', datetime.now(), vElapsedTime, vMessage, ''] 
-
-    except Exception as e:
-        # logging
-        end = timer()
-        vElapsedTime = timedelta(seconds=end-start)
-        vMessage = f"extraction of <{pDateAndTime}> failed"
-        dfLogging.loc[len(dfLogging.index)] = [pLoadId, vNotebookId, vLogNotebookName, vWorkspaceId, 'extraction of audit logs', datetime.now(), vElapsedTime, vMessage, str(e) ] 
-        if pDebugMode == "yes":
-            print(str(e))
+    # except Exception as e:
+    #     # logging
+    #     end = timer()
+    #     vElapsedTime = timedelta(seconds=end-start)
+    #     vMessage = f"extraction of <{pDateAndTime}> failed"
+    #     dfLogging.loc[len(dfLogging.index)] = [pLoadId, vNotebookId, vLogNotebookName, vWorkspaceId, 'extraction of audit logs', datetime.now(), vElapsedTime, vMessage, str(e) ] 
+    #     if pDebugMode == "yes":
+    #         print(str(e))
 
 # METADATA ********************
 
@@ -518,6 +517,37 @@ except Exception as e:
     if pDebugMode == "yes":
         print(vMessage)    
 
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# **Return the audit log extraction datetime**
+
+# CELL ********************
+
+if pInitialization == "yes":
+    # get the last date in the list of dates and add 1 day to it
+    vLastDate = df_audit_dates.iloc[-1, -1] 
+    vAuditLogExtractDateTime = datetime.strptime(vLastDate,vDateFormat)
+
+else:
+
+    # add 1 second to the time
+    vAuditLogExtractDateTime = vCurrentEnd + timedelta(hours = 0, minutes= 0, seconds=1) 
+
+# set the result
+vResult = {
+    "AuditLogExtractDateTime": vAuditLogExtractDateTime.strftime("%Y-%m-%d %H:%M:%S")
+}
+
+# exit
+notebookutils.notebook.exit(str(vResult))
 
 # METADATA ********************
 

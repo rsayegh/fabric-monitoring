@@ -207,16 +207,35 @@
         "type": "InvokePipeline",
         "typeProperties": {
           "parameters": {
-            "pModule": "platform-monitoring",
-            "pPipelineStatusFailed": "Failed",
-            "pPipelineStatusSucceeded": "Succeeded",
-            "pPipelineStatusCancelled": "Cancelled",
-            "pLoadId": "1",
+            "pModule": {
+              "value": "@pipeline().parameters.pModule",
+              "type": "Expression"
+            },
+            "pPipelineStatusFailed": {
+              "value": "@pipeline().parameters.pPipelineStatusFailed",
+              "type": "Expression"
+            },
+            "pPipelineStatusSucceeded": {
+              "value": "@pipeline().parameters.pPipelineStatusSucceeded",
+              "type": "Expression"
+            },
+            "pPipelineStatusCancelled": {
+              "value": "@pipeline().parameters.pPipelineStatusCancelled",
+              "type": "Expression"
+            },
+            "pLoadId": {
+              "value": "@pipeline().parameters.pLoadId",
+              "type": "Expression"
+            },
             "pConfiguration": {
               "value": "@variables('vConfiguration')",
               "type": "Expression"
             },
-            "pDebugMode": "no"
+            "pDebugMode": "yes",
+            "pConfigName": {
+              "value": "@pipeline().parameters.pConfigName",
+              "type": "Expression"
+            }
           },
           "waitOnCompletion": true,
           "workspaceId": "00000000-0000-0000-0000-000000000000",

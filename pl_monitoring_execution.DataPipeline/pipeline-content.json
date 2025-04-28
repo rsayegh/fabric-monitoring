@@ -206,7 +206,7 @@
           "storedProcedureParameters": {
             "ConfigName": {
               "value": {
-                "value": "@pipeline().parameters.pConfiguration",
+                "value": "@pipeline().parameters.pConfigName",
                 "type": "Expression"
               },
               "type": "String"
@@ -291,7 +291,7 @@
           "storedProcedureParameters": {
             "ConfigName": {
               "value": {
-                "value": "@pipeline().parameters.pConfiguration",
+                "value": "@pipeline().parameters.pConfigName",
                 "type": "Expression"
               },
               "type": "String"
@@ -405,6 +405,10 @@
       "pDebugMode": {
         "type": "string",
         "defaultValue": "yes"
+      },
+      "pConfigName": {
+        "type": "string",
+        "defaultValue": "Initialization"
       }
     },
     "variables": {

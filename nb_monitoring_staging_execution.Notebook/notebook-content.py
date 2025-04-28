@@ -32,6 +32,7 @@ from datetime import datetime, timedelta
 from timeit import default_timer as timer
 import sempy.fabric as fabric
 import json
+import ast
 
 # METADATA ********************
 
@@ -61,21 +62,15 @@ vWorkspaceId = vContext["currentWorkspaceId"] # where the notebook is running, t
 
 # MARKDOWN ********************
 
-# **Parameters**
+# **Parameters --> convert to code for debugging the notebook. otherwise, keep commented as parameters are passed from master notebook**
 
-# PARAMETERS CELL ********************
+# MARKDOWN ********************
 
-pLoadId = "1"
-pConfiguration = '{"pConfigId":1,"pConfigName":"Initialization","pAuditLogTimeframeInMinutes":"60","pAllActivities":"yes","pInitialization_Audit":"yes","pAuditLog":"yes","pLastProcessedDateAndTime_Audit":"2025-04-08 00:00:00","pkeyVaultName":"rs-kv-dev","pTenantId":"37800c96-90fb-411b-b068-4694b539e122","pDomainName":"MngEnvMCAP434897.onmicrosoft.com","pFabricSpnClientId":"32a31845-34d6-43b4-806c-0930619d5050","pFabricSpnSecretName":"FabricSpnSecret","pFabricSpnAdminConsentClientId":"636b5212-98d7-404f-96ea-2487556db673","pFabricSpnAdminConsentSecretName":"FabricSpnAdminConsentSecret","pAdmin":"admin@MngEnvMCAP434897.onmicrosoft.com","pAdminSecretName":"AdminSecret","pFabricSecurityGroupId":"6dbff53c-047a-4dda-a696-9f8ddd453288","pReloadDates":"yes","pStartDate":"2025-01-01","pEndDate":"2025-12-31","pInitialization_Inventory":"yes","pThrottleScanApi":"yes","pLastProcessedDateAndTime_Inventory":"1900-01-01 00:00:00","pTenantMetadata":"yes","pGatewayClusters":"yes","pInventory":"yes","pDatasetRefreshHistory":"yes","pTopNRefreshHistory":"0"}'
-pToken = ""
-pDebugMode = "yes"
+# pLoadId = "1"
+# pConfiguration = '{"pConfigId":1,"pConfigName":"Initialization","pAuditLogTimeframeInMinutes":"60","pAllActivities":"no","pInitialization_Audit":"yes","pAuditLog":"yes","pLastProcessedDateAndTime_Audit":"2025-04-09 00:00:00","pkeyVaultName":"rs-kv-dev","pTenantId":"37800c96-90fb-411b-b068-4694b539e122","pDomainName":"MngEnvMCAP434897.onmicrosoft.com","pFabricSpnClientId":"32a31845-34d6-43b4-806c-0930619d5050","pFabricSpnSecretName":"FabricSpnSecret","pFabricSpnAdminConsentClientId":"636b5212-98d7-404f-96ea-2487556db673","pFabricSpnAdminConsentSecretName":"FabricSpnAdminConsentSecret","pAdmin":"admin@MngEnvMCAP434897.onmicrosoft.com","pAdminSecretName":"AdminSecret","pFabricSecurityGroupId":"6dbff53c-047a-4dda-a696-9f8ddd453288","pReloadDates":"yes","pStartDate":"2025-01-01","pEndDate":"2025-12-31","pInitialization_Inventory":"yes","pThrottleScanApi":"yes","pLastProcessedDateAndTime_Inventory":"1900-01-01 00:00:00","pTenantMetadata":"yes","pGatewayClusters":"yes","pInventory":"yes","pDatasetRefreshHistory":"yes","pTopNRefreshHistory":"0"}'
+# pToken = ""
+# pDebugMode = "yes"
 
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
 
 # MARKDOWN ********************
 
@@ -135,7 +130,7 @@ if pAuditLog == "yes":
     dagList.append({
                 "name": "nb_monitoring_staging_audit_log",
                 "path": "nb_monitoring_staging_audit_log",
-                "timeoutPerCellInSeconds": 300,
+                "timeoutPerCellInSeconds": 900,
                 "args": {
                     "useRootDefaultLakehouse": True,
                     "pLoadId" : pLoadId,
@@ -176,54 +171,25 @@ if pGatewayClusters == "yes":
                     }
             })
 
-# # add to the DAG list nb_monitoring_staging_reference_dates
-# if pReloadDates == "yes":
-#     dagList.append({
-#                 "name": "nb_monitoring_staging_reference_dates",
-#                 "path": "nb_monitoring_staging_reference_dates",
-#                 "timeoutPerCellInSeconds": 300,
-#                 "args": {
-#                     "useRootDefaultLakehouse": True,
-#                     "pLoadId" : pLoadId,
-#                     "pDebugMode" : pDebugMode,
-#                     "pStartDate" : pStartDate,
-#                     "pEndDate": pEndDate
-#                     }
-#             })
-
-# # # add to the DAG list nb_monitoring_staging_dataset_refresh_history
-# # if pDatasetRefreshHistory == "yes":
-# #     dagList.append({
-# #                 "name": "nb_monitoring_staging_dataset_refresh_history",
-# #                 "path": "nb_monitoring_staging_dataset_refresh_history",
-# #                 "timeoutPerCellInSeconds": 300,
-# #                 "args": {
-# #                     "useRootDefaultLakehouse": True,
-# #                     "pLoadId" : pLoadId,
-# #                     "pToken" : vAccessToken,
-# #                     "pDebugMode" : pDebugMode,                    
-# #                     "pTopN" : pTopNRefreshHistory                                                                                 
-# #                     }
-# #             })
 
 
-# # add to the DAG list nb_monitoring_staging_workspace_inventory
-# if pInventory == "yes":
-#     dagList.append({
-#                 "name": "nb_monitoring_staging_workspace_inventory",
-#                 "path": "nb_monitoring_staging_workspace_inventory",
-#                 "timeoutPerCellInSeconds": 300,
-#                 "args": {
-#                     "useRootDefaultLakehouse": True,
-#                     "pLoadId" : pLoadId,
-#                     "pToken": vAccessToken,
-#                     "pDebugMode" : pDebugMode,                    
-#                     "pInitialize" : pInitialization_Inventory,
-#                     "pExportInventoryExpressions" : "yes",
-#                     "pThrottleScanApi" : pThrottleScanApi,
-#                     "pDateAndTime" : pLastProcessedDateAndTime_Inventory                                                                               
-#                     }
-#             })
+# add to the DAG list nb_monitoring_staging_workspace_inventory
+if pInventory == "yes":
+    dagList.append({
+                "name": "nb_monitoring_staging_workspace_inventory",
+                "path": "nb_monitoring_staging_workspace_inventory",
+                "timeoutPerCellInSeconds": 300,
+                "args": {
+                    "useRootDefaultLakehouse": True,
+                    "pLoadId" : pLoadId,
+                    "pToken": vAccessToken,
+                    "pDebugMode" : pDebugMode,                    
+                    "pInitialize" : pInitialization_Inventory,
+                    "pExportInventoryExpressions" : "yes",
+                    "pThrottleScanApi" : pThrottleScanApi,
+                    "pDateAndTime" : pLastProcessedDateAndTime_Inventory                                                                               
+                    }
+            })
 
 
 DAG = { "activities": dagList,"concurrency": 1, "timeoutInSeconds": 900 }
@@ -252,7 +218,7 @@ try:
     # start timer 
     start = timer()    
 
-    mssparkutils.notebook.runMultiple(DAG, {"displayDAGViaGraphviz": True})
+    results = notebookutils.notebook.runMultiple(DAG, {"displayDAGViaGraphviz": True})
 
     # logging
     end = timer()
@@ -315,14 +281,28 @@ except Exception as e:
 
 # MARKDOWN ********************
 
-# **Return the audit log extraction datetime**
+# **Return the last extraction time**
 
 # CELL ********************
 
-vResult = {
-    "AuditLogExtractDateTime":pLastProcessedDateAndTime_Audit,
-    "InventoryExtractionDateTime" : pLastProcessedDateAndTime_Inventory
-}
+vResult = {}
+
+for notebook, result in results.items():
+    exit_val_str = result.get('exitVal')
+    if exit_val_str:
+        try:
+            # Try to parse the exitVal
+            exit_val_dict = ast.literal_eval(exit_val_str)
+
+            # Only update if it's actually a dictionary
+            if isinstance(exit_val_dict, dict):
+                vResult.update(exit_val_dict)
+
+        except (ValueError, SyntaxError):
+            # Skip if parsing fails
+            print(f"Warning: Failed to parse exitVal for notebook '{notebook}'.")
+
+
 notebookutils.notebook.exit(str(vResult))
 
 # METADATA ********************

@@ -54,15 +54,9 @@ spark.conf.set("spark.sql.sources.partitionOverwriteMode","dynamic")
 
 # CELL ********************
 
-# import json
-# import requests
-# import pandas as pd
 import time
 import datetime as dt
 from datetime import datetime, timedelta 
-# import sys
-# from timeit import default_timer as timer
-# import numpy as np
 
 # METADATA ********************
 
@@ -73,7 +67,7 @@ from datetime import datetime, timedelta
 
 # MARKDOWN ********************
 
-# **Parameters**
+# **Parameters --> convert to code for debugging the notebook. otherwise, keep commented as parameters are passed from master notebook**
 
 # MARKDOWN ********************
 
@@ -1792,6 +1786,29 @@ except Exception as e:
     if pDebugMode == "yes":
         print(vMessage)    
 
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# **Return the inventory extraction datetime**
+
+# CELL ********************
+
+vExtractDateTime = datetime.now() - timedelta(days=1)
+
+# set the result
+vResult = {
+    "InventoryExtractionDateTime": vExtractDateTime.strftime("%Y-%m-%d 00:00:00")
+}
+
+# exit
+notebookutils.notebook.exit(str(vResult))
 
 # METADATA ********************
 

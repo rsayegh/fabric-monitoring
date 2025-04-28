@@ -13,7 +13,7 @@ BEGIN
 
 		EXEC dbo.spUpdateLastProcessedDateAndTime
 			 @LoadId = 1
-			,@ConfigName = ''
+			,@ConfigName = 'Initialization'
 			,@ExtractionType = 'audit-log'
 			,@ExtractionDateTime = '2025-04-08 00:00:00'
 
@@ -34,20 +34,20 @@ BEGIN
 		DECLARE @ConfigId BIGINT
 		SELECT @ConfigId = ConfigId FROM dbo.Config WHERE ConfigName = @ConfigName
 
-		/* update the last processed date time per extraction type */
+		/* update the ConfigAudit table */
 		IF @ExtractionType = 'audit-log' 
 		BEGIN
 			/* update the table ConfigAudit */
 			UPDATE [dbo].[ConfigAudit]
-			SET [LastProcessedDateAndTime] = DATEADD(DAY, 1, @ExtractionDateTime)
+			SET [LastProcessedDateAndTime] = @ExtractionDateTime 
 			WHERE ConfigId = @ConfigId
 		END
 
 		IF @ExtractionType = 'inventory' 
 		BEGIN
-			/* update the table ConfigCapacityMetrics */
+			/* update the ConfigInventory table */
 			UPDATE [dbo].[ConfigInventory]
-			SET [LastProcessedDateAndTime] = DATEADD(DAY, 1, @ExtractionDateTime)
+			SET [LastProcessedDateAndTime] = @ExtractionDateTime 
 			WHERE ConfigId = @ConfigId
 		END
 

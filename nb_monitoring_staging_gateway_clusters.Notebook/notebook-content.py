@@ -142,8 +142,6 @@ try:
     dfLogging.loc[len(dfLogging.index)] = [pLoadId, vNotebookId, vLogNotebookName, vWorkspaceId, 'gateway clusters response', datetime.now(), None, vMessage, ''] 
 
 except Exception as e:
-    end = timer()
-    vElapsedTime = timedelta(seconds=end-start)
     vMessage = "gateway clusters response failed"
     dfLogging.loc[len(dfLogging.index)] = [pLoadId, vNotebookId, vLogNotebookName, vWorkspaceId, 'gateway clusters response', datetime.now(), None, vMessage, str(e) ] 
     if pDebugMode == "yes":
@@ -277,36 +275,6 @@ else:
 # META   "language": "python",
 # META   "language_group": "synapse_pyspark"
 # META }
-
-# MARKDOWN ********************
-
-# **Annotations**
-
-# MARKDOWN ********************
-
-# if not df_gateway_cluster_members.empty:
-#     try:
-# 
-#         df_gateway_cluster_members_annotations_temp = flatten_nested_json_df(df_gateway_cluster_members[['id', 'memberGateways.annotation']].explode('memberGateways.annotation').dropna())
-# 
-#         df_gateway_cluster_member_annotations = pd.concat([df_gateway_cluster_member_annotations, df_gateway_cluster_members_annotations_temp], ignore_index=True)
-# 
-# 
-#         # logging
-#         vMessage = "extracting gateway cluster members succeeded"
-#         dfLogging.loc[len(dfLogging.index)] = [pLoadId, vNotebookId, vLogNotebookName, vWorkspaceId, 'gateway cluster member annotations', datetime.now(), None, vMessage, ''] 
-# 
-#     except Exception as e:
-#         vMessage = "extracting gateway cluster members failed"
-#         dfLogging.loc[len(dfLogging.index)] = [pLoadId, vNotebookId, vLogNotebookName, vWorkspaceId, 'gateway cluster member annotations', datetime.now(), None, vMessage, str(e) ] 
-#         if pDebugMode == "yes":
-#             print(str(e))
-# else:
-#     vMessage = "df_gateway_cluster_members dataframe does not exist"
-#     dfLogging.loc[len(dfLogging.index)] = [pLoadId, vNotebookId, vLogNotebookName, vWorkspaceId, 'gateway cluster member annotations', datetime.now(), '', vMessage, ''] 
-#     if pDebugMode == "yes":
-#         print(vMessage)              
-
 
 # MARKDOWN ********************
 

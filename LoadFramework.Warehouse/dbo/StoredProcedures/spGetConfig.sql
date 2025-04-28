@@ -20,7 +20,7 @@ BEGIN
             'pConfigName' : [ConfigName],
             'pAuditLogTimeframeInMinutes' : [AuditLogTimeframeInMinutes],
             'pAllActivities' : [AllActivities],
-            'pAuditLogTimeframeInMinutes' : [Initialization_Audit],
+            'pInitialization_Audit' : [Initialization_Audit],
             'pAuditLog' : [ExportAudit],
 			'pLastProcessedDateAndTime_Audit' : [LastProcessedDateAndTime_Audit],
             'pkeyVaultName' : [keyVaultName],

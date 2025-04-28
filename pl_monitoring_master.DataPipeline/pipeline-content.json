@@ -572,7 +572,7 @@
     "parameters": {
       "pModule": {
         "type": "string",
-        "defaultValue": "platform-monitoring"
+        "defaultValue": "fabric-monitoring"
       },
       "pPipelineStatusFailed": {
         "type": "string",
