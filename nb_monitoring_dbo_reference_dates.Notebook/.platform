@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_monitoring_dbo_reference_dates",
+    "description": "python code to reload the date table if required"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "f23017ee-85f8-aae1-4621-3d8529a14f3a"
+  }
+}

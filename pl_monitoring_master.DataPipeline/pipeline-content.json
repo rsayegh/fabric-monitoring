@@ -1,0 +1,601 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[spInsertLoad]",
+          "storedProcedureParameters": {
+            "EntRunId": {
+              "value": {
+                "value": "@pipeline().RunId",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "Module": {
+              "value": {
+                "value": "@pipeline().parameters.pModule",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "ModuleRunId": {
+              "value": {
+                "value": "@pipeline().RunId",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "PipelineTriggerDT": {
+              "value": {
+                "value": "@formatDateTime(pipeline().TriggerTime)",
+                "type": "Expression"
+              },
+              "type": "Datetime"
+            },
+            "StartDate": {
+              "value": {
+                "value": "@formatDateTime(pipeline().TriggerTime)",
+                "type": "Expression"
+              },
+              "type": "Datetime"
+            },
+            "TriggerId": {
+              "value": {
+                "value": "@pipeline().TriggerId",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "LoadFramework",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e3133f60-e2dd-435c-ba28-6c4c88977f6f",
+              "endpoint": "n4qsebcwyjpu3cibgdx7fzi5gq-jw5lm3mjuiuunldhmjzvu3fjxq.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "6db6ba4d-a289-4629-ac67-62735a6ca9bc"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.00:10:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SQL - Create new load",
+        "description": "stored procedure to create a new load",
+        "dependsOn": []
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "vLoadId",
+          "value": {
+            "value": "@string(activity('SQL - Get LoadId').output.firstRow.LoadId)",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "VAR - Set LoadId",
+        "dependsOn": [
+          {
+            "activity": "SQL - Get LoadId",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "sqlReaderStoredProcedureName": "[dbo].[spGetLoad]",
+            "storedProcedureParameters": {
+              "Module": {
+                "type": "String",
+                "value": {
+                  "value": "@pipeline().parameters.pModule",
+                  "type": "Expression"
+                }
+              },
+              "ModuleRunId": {
+                "type": "String",
+                "value": {
+                  "value": "@pipeline().RunId",
+                  "type": "Expression"
+                }
+              }
+            },
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00"
+          },
+          "datasetSettings": {
+            "type": "DataWarehouseTable",
+            "schema": [],
+            "linkedService": {
+              "name": "LoadFramework",
+              "properties": {
+                "type": "DataWarehouse",
+                "typeProperties": {
+                  "artifactId": "e3133f60-e2dd-435c-ba28-6c4c88977f6f",
+                  "endpoint": "n4qsebcwyjpu3cibgdx7fzi5gq-jw5lm3mjuiuunldhmjzvu3fjxq.datawarehouse.fabric.microsoft.com",
+                  "workspaceId": "6db6ba4d-a289-4629-ac67-62735a6ca9bc"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.00:10:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SQL - Get LoadId",
+        "description": "stored procedure to retrieve the load id created",
+        "dependsOn": [
+          {
+            "activity": "SQL - Create new load",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[spStartLoad]",
+          "storedProcedureParameters": {
+            "LoadId": {
+              "value": {
+                "value": "@variables('vLoadId')",
+                "type": "Expression"
+              },
+              "type": "Int64"
+            },
+            "Module": {
+              "value": {
+                "value": "@pipeline().parameters.pModule",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "LoadFramework",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e3133f60-e2dd-435c-ba28-6c4c88977f6f",
+              "endpoint": "n4qsebcwyjpu3cibgdx7fzi5gq-jw5lm3mjuiuunldhmjzvu3fjxq.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "6db6ba4d-a289-4629-ac67-62735a6ca9bc"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.00:10:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SQL - Start load",
+        "description": "stored procedure to start the load",
+        "dependsOn": [
+          {
+            "activity": "VAR - Set LoadId",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[spUpdateLoad]",
+          "storedProcedureParameters": {
+            "LoadId": {
+              "value": {
+                "value": "@variables('vLoadId')",
+                "type": "Expression"
+              },
+              "type": "Int64"
+            },
+            "Module": {
+              "value": {
+                "value": "@pipeline().parameters.pModule",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "PipelineStatus": {
+              "value": {
+                "value": "@pipeline().parameters.pPipelineStatusCancelled",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "LoadFramework",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e3133f60-e2dd-435c-ba28-6c4c88977f6f",
+              "endpoint": "n4qsebcwyjpu3cibgdx7fzi5gq-jw5lm3mjuiuunldhmjzvu3fjxq.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "6db6ba4d-a289-4629-ac67-62735a6ca9bc"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.00:10:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SQL - Cancel load",
+        "description": "stored procedure to cancel the load if it cannot be started",
+        "dependsOn": [
+          {
+            "activity": "SQL - Start load",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[spInsertLoadLog]",
+          "storedProcedureParameters": {
+            "InvokedNotebook": {
+              "value": null,
+              "type": "String"
+            },
+            "InvokedPipeline": {
+              "value": "pl_pm_config",
+              "type": "String"
+            },
+            "LoadId": {
+              "value": {
+                "value": "@variables('vLoadId')",
+                "type": "Expression"
+              },
+              "type": "Int64"
+            },
+            "LoadStatus": {
+              "value": {
+                "value": "@pipeline().parameters.pPipelineStatusSucceeded",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "PipelineName": {
+              "value": {
+                "value": "@pipeline().PipelineName",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "LoadFramework",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e3133f60-e2dd-435c-ba28-6c4c88977f6f",
+              "endpoint": "n4qsebcwyjpu3cibgdx7fzi5gq-jw5lm3mjuiuunldhmjzvu3fjxq.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "6db6ba4d-a289-4629-ac67-62735a6ca9bc"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.00:10:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SQL - config - log success",
+        "description": "stored procedure to log the success of the previous activity",
+        "dependsOn": [
+          {
+            "activity": "PL - config",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[spInsertLoadLog]",
+          "storedProcedureParameters": {
+            "InvokedNotebook": {
+              "value": null,
+              "type": "String"
+            },
+            "InvokedPipeline": {
+              "value": "pl_pm_config",
+              "type": "String"
+            },
+            "LoadId": {
+              "value": {
+                "value": "@variables('vLoadId')",
+                "type": "Expression"
+              },
+              "type": "Int64"
+            },
+            "LoadStatus": {
+              "value": {
+                "value": "@pipeline().parameters.pPipelineStatusFailed",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "PipelineName": {
+              "value": {
+                "value": "@pipeline().PipelineName",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "LoadFramework",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e3133f60-e2dd-435c-ba28-6c4c88977f6f",
+              "endpoint": "n4qsebcwyjpu3cibgdx7fzi5gq-jw5lm3mjuiuunldhmjzvu3fjxq.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "6db6ba4d-a289-4629-ac67-62735a6ca9bc"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.00:10:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SQL - config - log failure",
+        "description": "stored procedure to log the failure of the previous activity",
+        "dependsOn": [
+          {
+            "activity": "PL - config",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[spUpdateLoad]",
+          "storedProcedureParameters": {
+            "LoadId": {
+              "value": {
+                "value": "@variables('vLoadId')",
+                "type": "Expression"
+              },
+              "type": "Int64"
+            },
+            "Module": {
+              "value": {
+                "value": "@pipeline().parameters.pModule",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "PipelineStatus": {
+              "value": {
+                "value": "@pipeline().parameters.pPipelineStatusSucceeded",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "LoadFramework",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e3133f60-e2dd-435c-ba28-6c4c88977f6f",
+              "endpoint": "n4qsebcwyjpu3cibgdx7fzi5gq-jw5lm3mjuiuunldhmjzvu3fjxq.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "6db6ba4d-a289-4629-ac67-62735a6ca9bc"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.00:10:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SQL - Successful Load",
+        "description": "stored procedure to flag the load as successful",
+        "dependsOn": [
+          {
+            "activity": "SQL - config - log success",
+            "dependencyConditions": [
+              "Completed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[spUpdateLoad]",
+          "storedProcedureParameters": {
+            "LoadId": {
+              "value": {
+                "value": "@variables('vLoadId')",
+                "type": "Expression"
+              },
+              "type": "Int64"
+            },
+            "Module": {
+              "value": {
+                "value": "@pipeline().parameters.pModule",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "PipelineStatus": {
+              "value": {
+                "value": "@pipeline().parameters.pPipelineStatusFailed",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "LoadFramework",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e3133f60-e2dd-435c-ba28-6c4c88977f6f",
+              "endpoint": "n4qsebcwyjpu3cibgdx7fzi5gq-jw5lm3mjuiuunldhmjzvu3fjxq.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "6db6ba4d-a289-4629-ac67-62735a6ca9bc"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.00:10:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SQL - Failed Load",
+        "description": "stored procedure to flag the load as failed",
+        "dependsOn": [
+          {
+            "activity": "SQL - config - log failure",
+            "dependencyConditions": [
+              "Completed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "InvokePipeline",
+        "typeProperties": {
+          "parameters": {
+            "pModule": {
+              "value": "@pipeline().parameters.pModule",
+              "type": "Expression"
+            },
+            "pPipelineStatusFailed": {
+              "value": "@pipeline().parameters.pPipelineStatusFailed",
+              "type": "Expression"
+            },
+            "pPipelineStatusSucceeded": {
+              "value": "@pipeline().parameters.pPipelineStatusSucceeded",
+              "type": "Expression"
+            },
+            "pPipelineStatusCancelled": {
+              "value": "@pipeline().parameters.pPipelineStatusCancelled",
+              "type": "Expression"
+            },
+            "pLoadId": {
+              "value": "@variables('vLoadId')",
+              "type": "Expression"
+            },
+            "pConfigName": {
+              "value": "@pipeline().parameters.pConfigName",
+              "type": "Expression"
+            }
+          },
+          "waitOnCompletion": true,
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "pipelineId": "62815eea-00ca-bf75-436f-8912d5dd4060",
+          "operationType": "InvokeFabricPipeline"
+        },
+        "externalReferences": {
+          "connection": "10dc1987-0e98-4a21-b727-efb0ad909097"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "PL - config",
+        "dependsOn": [
+          {
+            "activity": "SQL - Start load",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "pModule": {
+        "type": "string",
+        "defaultValue": "platform-monitoring"
+      },
+      "pPipelineStatusFailed": {
+        "type": "string",
+        "defaultValue": "Failed"
+      },
+      "pPipelineStatusSucceeded": {
+        "type": "string",
+        "defaultValue": "Succeeded"
+      },
+      "pPipelineStatusCancelled": {
+        "type": "string",
+        "defaultValue": "Cancelled"
+      },
+      "pConfigName": {
+        "type": "string",
+        "defaultValue": "Initialization"
+      }
+    },
+    "variables": {
+      "vLoadId": {
+        "type": "String",
+        "defaultValue": "1"
+      }
+    }
+  }
+}
