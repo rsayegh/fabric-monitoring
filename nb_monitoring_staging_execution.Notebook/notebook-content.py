@@ -62,13 +62,20 @@ vWorkspaceId = vContext["currentWorkspaceId"] # where the notebook is running, t
 
 # MARKDOWN ********************
 
-# **Parameters --> convert to code for debugging the notebook. otherwise, keep commented as parameters are passed from master notebook**
+# **Parameters**
 
-# MARKDOWN ********************
+# PARAMETERS CELL ********************
 
-# pLoadId = "1"
-# pConfiguration = '{"pConfigId":1,"pConfigName":"Initialization","pAuditLogTimeframeInMinutes":"60","pAllActivities":"yes","pInitialization_Audit":"yes","pAuditLog":"yes","pLastProcessedDateAndTime_Audit":"2025-04-27 00:00:00","pReloadDates":"yes","pStartDate":"2025-01-01","pEndDate":"2025-12-31","pInitialization_Inventory":"yes","pThrottleScanApi":"yes","pLastProcessedDateAndTime_Inventory":"2025-04-27 00:00:00","pTenantMetadata":"yes","pGatewayClusters":"yes","pInventory":"yes","pDatasetRefreshHistory":"yes","pTopNRefreshHistory":"0"}'
-# pDebugMode = "no"
+pLoadId = "1"
+pConfiguration = '{"pConfigId":1,"pConfigName":"Initialization","pAuditLogTimeframeInMinutes":"60","pAllActivities":"yes","pInitialization_Audit":"yes","pAuditLog":"yes","pLastProcessedDateAndTime_Audit":"2025-04-27 00:00:00","pReloadDates":"yes","pStartDate":"2025-01-01","pEndDate":"2025-12-31","pInitialization_Inventory":"yes","pThrottleScanApi":"yes","pLastProcessedDateAndTime_Inventory":"2025-04-27 00:00:00","pTenantMetadata":"yes","pGatewayClusters":"yes","pInventory":"yes","pDatasetRefreshHistory":"yes","pTopNRefreshHistory":"0"}'
+pDebugMode = "no"
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
 
 # MARKDOWN ********************
 

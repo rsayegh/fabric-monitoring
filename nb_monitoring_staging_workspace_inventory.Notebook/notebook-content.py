@@ -69,16 +69,23 @@ from datetime import datetime, timedelta
 
 # **Parameters --> convert to code for debugging the notebook. otherwise, keep commented as parameters are passed from master notebook**
 
-# MARKDOWN ********************
+# CELL ********************
 
-# pLoadId = "1"
-# pToken = ""
-# pDebugMode = "yes"
-# pInitialize = 'yes'
-# pExportInventoryExpressions = 'yes'  
-# pThrottleScanApi = 'yes' 
-# pDateAndTime = '2024-01-01 00:00:00'
+pLoadId = "1"
+pToken = ""
+pDebugMode = "yes"
+pInitialize = 'yes'
+pExportInventoryExpressions = 'yes'  
+pThrottleScanApi = 'yes' 
+pDateAndTime = '2024-01-01 00:00:00'
 
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
 
 # MARKDOWN ********************
 
@@ -242,7 +249,7 @@ try:
         vWorkspaceUrl = f"admin/workspaces/modified?excludePersonalWorkspaces=False"
     # if not use the modifiedsince parameter
     else:
-        vWorkspaceUrl = f"admin/workspaces/modified?modifiedSince={vCurrentStartIso8601}&excludePersonalWorkspaces=True"
+        vWorkspaceUrl = f"admin/workspaces/modified?modifiedSince={vCurrentStartIso8601}&excludePersonalWorkspaces=False"
 
     # get the response
     workspaces_response = requests.get(vBaseUrl + vWorkspaceUrl, headers=vHeaders)
