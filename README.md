@@ -89,9 +89,9 @@ In a key vault of your choice, create the following secrets:
 
 <br />
 
-## LoadFramework database
+# LoadFramework database
 
-### Tables
+## Tables
 
 This is the list of tables used in the LoadFramework database:
 
@@ -168,18 +168,18 @@ There are additional tables in this database related to on-going developments. T
 - dbo.ConfigCapacityMetrics
 - dbo.ConfigKusto
 
-### Views
+## Views
 
 The `LoadFramework` database includes a single view, `dbo.vwConfig`, which combines data from multiple configuration tables into a unified list of configurations along with their associated attributes.
 <br>
 
-### Stored procedures
+## Stored procedures
 
 The `LoadFramework` database contains several stored procedures that support configuration management, load tracking, and logging for the data extraction process.
 
 ---
 
-#### `dbo.spGetConfig`
+### `dbo.spGetConfig`
 
 **Description:**  
 Retrieves a specific configuration and its properties using the `dbo.vwConfig` view. It generates a single json structure containing all the required properties of the configuration.
@@ -189,7 +189,7 @@ Retrieves a specific configuration and its properties using the `dbo.vwConfig` v
 
 ---
 
-#### `dbo.spGetLoad`
+### `dbo.spGetLoad`
 
 **Description:**  
 Retrieves the most recent load based on the current runtime and module.
@@ -200,7 +200,7 @@ Retrieves the most recent load based on the current runtime and module.
 
 ---
 
-#### `dbo.spInsertLoad`
+### `dbo.spInsertLoad`
 
 **Description:**  
 Creates a new load entry in dbo.Load table.
@@ -215,7 +215,7 @@ Creates a new load entry in dbo.Load table.
 
 ---
 
-#### `dbo.spInsertLoadLog`
+### `dbo.spInsertLoadLog`
 
 **Description:**  
 Creates a log entry for a specific step within a load process.
@@ -348,6 +348,30 @@ This is the execution pipeline. It takes a configuration in the form of a json o
   <img src="resources/Pipeline - Execution.png" alt="Execution pipeline" width="600"/>
 </p>
 <p align="center"><em>Figure 3: Execution pipeline workflow</em></p>
+
+# Notebooks
+
+The solution includes the following 7 notebooks:
+
+- `nb_monitoring_staging_audit_log`
+- `nb_monitoring_staging_execution`
+- `nb_monitoring_staging_gateway_clusters`
+- `nb_monitoring_staging_tenant_metadata`
+- `nb_monitoring_staging_workspace_inventory`
+- `nb_helper`
+- `nb_authentication`
+
+**Notebook roles:**
+
+- The core of the extraction process is handled by the `nb_monitoring_staging_execution` notebook.  
+  It is triggered by the `pl_monitoring_execution` pipeline and determines—based on the provided configuration—which of the following notebooks to run:
+  - `nb_monitoring_staging_audit_log`
+  - `nb_monitoring_staging_gateway_clusters`
+  - `nb_monitoring_staging_tenant_metadata`
+  - `nb_monitoring_staging_workspace_inventory`
+
+- The `nb_helper` and `nb_authentication` notebooks serve as support modules, providing shared logic and handling authentication, respectively.
+
 
 
 # How to use the repo
