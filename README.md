@@ -24,7 +24,7 @@ Data extractions are driven by **Data Factory** pipelines, starting with a pipel
 Each configuration includes specific inputs needed for orchestration and notebook execution.  
 For example, a configuration might be designed to extract only audit logs and would include only the relevant parameters for that task.
 
-> See the corresponding wiki section for more details on configurations.
+> Check the `Insert Config - Initialization.sql` file in the `resources` folder for an example. 
 
 The extraction logic is implemented in **Notebooks**, primarily written in Python. In some cases, they may also include **Spark SQL** queries to interact with data stored in the lakehouse.
 
@@ -348,3 +348,9 @@ This is the execution pipeline. It takes a configuration in the form of a json o
   <img src="resources/Pipeline - Execution.png" alt="Execution pipeline" width="600"/>
 </p>
 <p align="center"><em>Figure 3: Execution pipeline workflow</em></p>
+
+
+# How to use the repo
+
+in-progress
+
