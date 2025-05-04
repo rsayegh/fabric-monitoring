@@ -277,7 +277,9 @@ Data Factory pipelines are used to orchestrate the extraction process. There are
 ## `pl_monitoring_master`
 
 **Description**:
-This is the master pipeline. It takes a configuration name as a parameter and executes the pl_monitoring_config pipeline. It also creates the new load at each execution.
+<br />
+This is the master pipeline. It takes a configuration name as a parameter, passes it and executes the `pl_monitoring_config` pipeline. It also creates the new load at each execution.
+<br />
 
 **Pipeline Parameters**:
 
@@ -286,3 +288,63 @@ This is the master pipeline. It takes a configuration name as a parameter and ex
   * pPipelineStatusSucceeded: Succeeded
   * pPipelineStatusCancelled: Cancelled
   * pConfigName: the configuration name that will drive the extraction
+
+**Pipeline Workflow**:
+
+
+<p align="center">
+  <img src="resources/Pipeline - Master.png" alt="Master pipeline" width="600"/>
+</p>
+<p align="center"><em>Figure 3: Master pipeline workflow</em></p>
+
+<br />
+
+## `pl_monitoring_config`
+
+**Description**:
+<br />
+This is the configuration pipeline. It takes a configuration name from the `pl_monitoring_master` pipeline, retrieves the actual configuration in a json format, and passes it and executes the `pl_monitoring_execution` pipeline.
+<br />
+
+**Pipeline Parameters**:
+
+  * pModule: fabric-monitoring
+  * pPipelineStatusFailed: Failed
+  * pPipelineStatusSucceeded: Succeeded
+  * pPipelineStatusCancelled: Cancelled
+  * pLoadId: the current load id
+  * pConfigName: the configuration name
+
+**Pipeline Workflow**:
+
+<p align="center">
+  <img src="resources/Pipeline - Config.png" alt="Config pipeline" width="600"/>
+</p>
+<p align="center"><em>Figure 3: Config pipeline workflow</em></p>
+
+<br />
+
+## `pl_monitoring_execution`
+
+**Description**:
+<br />
+This is the execution pipeline. It takes a configuration in the form of a json object from the `pl_monitoring_config` pipeline, and passes it and executes the `nb_monitoring_staging_execution` notebook. `nb_monitoring_staging_execution` is configured with 1 retry.
+<br />
+
+**Pipeline Parameters**:
+
+  * pModule: fabric-monitoring
+  * pPipelineStatusFailed: Failed
+  * pPipelineStatusSucceeded: Succeeded
+  * pPipelineStatusCancelled: Cancelled
+  * pLoadId: the current load id
+  * pConfiguration: the configuration in the form of a json object
+  * pDebugMode: yes or no. it should be set to no when the pipeline is scheduled.
+  * pConfigName: the configuration name
+    
+**Pipeline Workflow**:
+
+<p align="center">
+  <img src="resources/Pipeline - Execution.png" alt="Execution pipeline" width="600"/>
+</p>
+<p align="center"><em>Figure 3: Execution pipeline workflow</em></p>
