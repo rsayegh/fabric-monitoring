@@ -52,12 +52,20 @@ Depending on the type of operation being performed in the notebooks, authenticat
 
 - **Fabric SPN**
 
-This is an SPN that does not require admin consent at the tenant level. It uses the following API permissions:
+  This is an SPN that does not require admin consent at the tenant level. It uses the following API permissions:
+
+<p align="center">
+  <img src="resources/Azure - Fabric SPN - Permissions.png" alt="Fabric SPN" width="600"/>
+</p>
+<p align="center"><em>Figure 2: Fabric SPN API permissions</em></p>
 
 
 - **Fabric SPN Admin Consent**
 
-This is an SPN that requires admin consent at the tenant level. It uses the following API permissions:
+  This is an SPN that requires admin consent at the tenant level. It uses the following API permissions:
 
-
+<p align="center">
+  <img src="resources/Azure - Fabric SPN Admin Consent - Permissions.png" alt="Fabric SPN" width="600"/>
+</p>
+<p align="center"><em>Figure 2: Fabric SPN Amin Consent - API permissions</em></p>
 
