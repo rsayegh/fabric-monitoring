@@ -69,3 +69,23 @@ Depending on the type of operation being performed in the notebooks, authenticat
 </p>
 <p align="center"><em>Figure 2: Fabric SPN Amin Consent - API permissions</em></p>
 
+### Azure Key Vault
+
+An **Azure Key Vault** is required for the solution. It will hold secrets for authenticating with the Fabric APIs.
+
+In a key vault of your choice, create the following secrets:
+
+<br />
+
+  | Secret Name | Secret Value | Comment |
+  | -------- | ------- | ------- |
+  | AzureTenantId | <strong>your azure tenant id</strong> |  |
+  | DomainName | <strong>your domain name</strong> |  |
+  | FabricSpnId | <strong>the client id of the Fabric SPN app</strong> |  |
+  | FabricSpnSecret | <strong>the secret of the Fabric SPN app</strong> |  |
+  | FabricSpnAdminConsentId | <strong>the client id of the Fabric SPN Admin Consent app</strong> |  |
+  | FabricSpnAdminConsentSecret | <strong>the secret of the Fabric SPN Admin Consent app</strong> |  |
+  | FabricSecurityGroupId | <strong> security group id</strong> | a security group in which the 2 fabric SPNs are added |
+
+<br />
+
