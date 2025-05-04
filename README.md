@@ -27,3 +27,37 @@ For example, a configuration might be designed to extract only audit logs and wo
 > See the corresponding wiki pages for more details on configuration.
 
 The extraction logic is implemented in **Notebooks**, primarily written in Python. In some cases, they may also include **Spark SQL** queries to interact with data stored in the lakehouse.
+
+# Architecture
+
+<p align="center">
+  <img src="resources/Architecture.png" alt="Architecture Diagram" width="600"/>
+</p>
+<p align="center"><em>Figure 1: High-level architecture overview</em></p>
+
+# Load Framework & Azure Setup
+
+## Azure Setup
+
+This solution makes use of the following Azure components:
+
+- **Service Principals**
+- **Azure Key Vault**
+
+### Service Principals
+
+The solution uses two different **Service Principals**, each configured with specific API permissions.
+
+Depending on the type of operation being performed in the notebooks, authentication with the fabric api may require one or both of these SPNs.
+
+- **Fabric SPN**
+
+This is an SPN that does not require admin consent at the tenant level. It uses the following API permissions:
+
+
+- **Fabric SPN Admin Consent**
+
+This is an SPN that requires admin consent at the tenant level. It uses the following API permissions:
+
+
+
