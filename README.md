@@ -369,6 +369,8 @@ The solution includes the following 7 notebooks:
   - `nb_monitoring_staging_gateway_clusters`
   - `nb_monitoring_staging_tenant_metadata`
   - `nb_monitoring_staging_workspace_inventory`
+ 
+Each notebook extracts a specific set of data and writes it to the `MonitoringLake` lakehouse, under the `staging` schema.
 
 - The `nb_helper` and `nb_authentication` notebooks serve as support modules, providing shared logic and handling authentication, respectively.
 
