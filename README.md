@@ -265,3 +265,24 @@ Updates the status of the current load based on the pipeline execution status.
 
 The solution uses 3 statuses: Failed, Succeeded, Cancelled.
 
+# Data Factory Pipelines
+
+Data Factory pipelines are used to orchestrate the extraction process. There are 3 pipelines in the solution:
+- pl_monitoring_master
+- pl_monitoring_config
+- pl_monitoring_execution
+
+---
+
+## `pl_monitoring_master`
+
+**Description**:
+This is the master pipeline. It takes a configuration name as a parameter and executes the pl_monitoring_config pipeline. It also creates the new load at each execution.
+
+**Pipeline Parameters**:
+
+  * pModule: fabric-monitoring
+  * pPipelineStatusFailed: Failed
+  * pPipelineStatusSucceeded: Succeeded
+  * pPipelineStatusCancelled: Cancelled
+  * pConfigName: the configuration name that will drive the extraction
