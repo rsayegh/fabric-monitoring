@@ -1,0 +1,416 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "8e611a4a-e807-bb9c-4752-ce0b2c8d346c",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "pLoadId": {
+              "value": {
+                "value": "@pipeline().parameters.pLoadId",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "pConfiguration": {
+              "value": {
+                "value": "@string(pipeline().parameters.pConfiguration)",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "pDebugMode": {
+              "value": {
+                "value": "@pipeline().parameters.pDebugMode",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_monitoring_staging_execution",
+        "dependsOn": []
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[spInsertLoadLog]",
+          "storedProcedureParameters": {
+            "InvokedNotebook": {
+              "value": "nb_monitoring_staging_execution",
+              "type": "String"
+            },
+            "InvokedPipeline": {
+              "value": null,
+              "type": "String"
+            },
+            "LoadId": {
+              "value": {
+                "value": "@pipeline().parameters.pLoadId",
+                "type": "Expression"
+              },
+              "type": "Int64"
+            },
+            "LoadStatus": {
+              "value": {
+                "value": "@pipeline().parameters.pPipelineStatusSucceeded",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "PipelineName": {
+              "value": {
+                "value": "@pipeline().PipelineName",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "LoadFramework",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e3133f60-e2dd-435c-ba28-6c4c88977f6f",
+              "endpoint": "n4qsebcwyjpu3cibgdx7fzi5gq-jw5lm3mjuiuunldhmjzvu3fjxq.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "6db6ba4d-a289-4629-ac67-62735a6ca9bc"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.00:10:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SQL - execution - log success",
+        "description": "stored procedure to log the success of the previous activity",
+        "dependsOn": [
+          {
+            "activity": "nb_monitoring_staging_execution",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[spInsertLoadLog]",
+          "storedProcedureParameters": {
+            "InvokedNotebook": {
+              "value": "nb_monitoring_staging_execution",
+              "type": "String"
+            },
+            "InvokedPipeline": {
+              "value": null,
+              "type": "String"
+            },
+            "LoadId": {
+              "value": {
+                "value": "@pipeline().parameters.pLoadId",
+                "type": "Expression"
+              },
+              "type": "Int64"
+            },
+            "LoadStatus": {
+              "value": {
+                "value": "@pipeline().parameters.pPipelineStatusFailed",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "PipelineName": {
+              "value": {
+                "value": "@pipeline().PipelineName",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "LoadFramework",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e3133f60-e2dd-435c-ba28-6c4c88977f6f",
+              "endpoint": "n4qsebcwyjpu3cibgdx7fzi5gq-jw5lm3mjuiuunldhmjzvu3fjxq.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "6db6ba4d-a289-4629-ac67-62735a6ca9bc"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.00:10:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SQL - execution - log failure",
+        "description": "stored procedure to log the failure of the previous activity",
+        "dependsOn": [
+          {
+            "activity": "nb_monitoring_staging_execution",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "vAuditLogExtractionDateTime",
+          "value": {
+            "value": "@json(activity('nb_monitoring_staging_execution').output.result.exitValue).AuditLogExtractDateTime",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "VAR - Set last audit extraction datetime",
+        "dependsOn": [
+          {
+            "activity": "nb_monitoring_staging_execution",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[spUpdateLastProcessedDateAndTime]",
+          "storedProcedureParameters": {
+            "ConfigName": {
+              "value": {
+                "value": "@pipeline().parameters.pConfigName",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "ExtractionDateTime": {
+              "value": {
+                "value": "@variables('vAuditLogExtractionDateTime')",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "ExtractionType": {
+              "value": "audit-log",
+              "type": "String"
+            },
+            "LoadId": {
+              "value": {
+                "value": "@pipeline().parameters.pLoadId",
+                "type": "Expression"
+              },
+              "type": "Int64"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "LoadFramework",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e3133f60-e2dd-435c-ba28-6c4c88977f6f",
+              "endpoint": "n4qsebcwyjpu3cibgdx7fzi5gq-jw5lm3mjuiuunldhmjzvu3fjxq.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "6db6ba4d-a289-4629-ac67-62735a6ca9bc"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.00:10:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SQL - execution - last audit log datetime",
+        "description": "",
+        "dependsOn": [
+          {
+            "activity": "VAR - Set last audit extraction datetime",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "vInventoryExtractionDateTime",
+          "value": {
+            "value": "@json(activity('nb_monitoring_staging_execution').output.result.exitValue).InventoryExtractionDateTime",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "VAR - Set last inventory extraction datetime",
+        "dependsOn": [
+          {
+            "activity": "nb_monitoring_staging_execution",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[spUpdateLastProcessedDateAndTime]",
+          "storedProcedureParameters": {
+            "ConfigName": {
+              "value": {
+                "value": "@pipeline().parameters.pConfigName",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "ExtractionDateTime": {
+              "value": {
+                "value": "@variables('vInventoryExtractionDateTime')",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "ExtractionType": {
+              "value": "inventory",
+              "type": "String"
+            },
+            "LoadId": {
+              "value": {
+                "value": "@pipeline().parameters.pLoadId",
+                "type": "Expression"
+              },
+              "type": "Int64"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "LoadFramework",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e3133f60-e2dd-435c-ba28-6c4c88977f6f",
+              "endpoint": "n4qsebcwyjpu3cibgdx7fzi5gq-jw5lm3mjuiuunldhmjzvu3fjxq.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "6db6ba4d-a289-4629-ac67-62735a6ca9bc"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.00:10:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SQL - execution - last inventory datetime_copy1",
+        "description": "",
+        "dependsOn": [
+          {
+            "activity": "VAR - Set last inventory extraction datetime",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "pModule": {
+        "type": "string",
+        "defaultValue": "platform-monitoring"
+      },
+      "pPipelineStatusFailed": {
+        "type": "string",
+        "defaultValue": "Failed"
+      },
+      "pPipelineStatusSucceeded": {
+        "type": "string",
+        "defaultValue": "Succeeded"
+      },
+      "pPipelineStatusCancelled": {
+        "type": "string",
+        "defaultValue": "Cancelled"
+      },
+      "pLoadId": {
+        "type": "string",
+        "defaultValue": "1"
+      },
+      "pConfiguration": {
+        "type": "string",
+        "defaultValue": {
+          "pConfigId": 1,
+          "pConfigName": "Initialization",
+          "pAuditLogTimeframeInMinutes": "60",
+          "pAllActivities": "yes",
+          "pInitialization_Audit": "yes",
+          "pAuditLog": "yes",
+          "pLastProcessedDateAndTime_Audit": "2025-04-27 00:00:00",
+          "pKeyVaultName": "rs-vault-dev",
+          "pTenantId": "AzureTenantId",
+          "pDomainName": "DomainName",
+          "pFabricSpnClientId": "FabricSpnId",
+          "pFabricSpnSecret": "FabricSpnSecret",
+          "pFabricSpnAdminConsentClientId": "FabricSpnAdminConsentId",
+          "pFabricSpnAdminConsentSecret": "FabricSpnAdminConsentSecret",
+          "pFabricSecurityGroupId": "FabricSecurityGroupId",
+          "pReloadDates": "yes",
+          "pStartDate": "2025-01-01",
+          "pEndDate": "2025-12-31",
+          "pInitialization_Inventory": "yes",
+          "pThrottleScanApi": "yes",
+          "pLastProcessedDateAndTime_Inventory": "2025-04-27 00:00:00",
+          "pTenantMetadata": "yes",
+          "pGatewayClusters": "yes",
+          "pInventory": "yes",
+          "pDatasetRefreshHistory": "yes",
+          "pTopNRefreshHistory": "0"
+        }
+      },
+      "pDebugMode": {
+        "type": "string",
+        "defaultValue": "yes"
+      },
+      "pConfigName": {
+        "type": "string",
+        "defaultValue": "Initialization"
+      }
+    },
+    "variables": {
+      "vAuditLogExtractionDateTime": {
+        "type": "String"
+      },
+      "vInventoryExtractionDateTime": {
+        "type": "String"
+      }
+    }
+  }
+}
