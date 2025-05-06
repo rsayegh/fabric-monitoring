@@ -378,5 +378,23 @@ Each notebook extracts a specific set of data and writes it to the `MonitoringLa
 
 # How to use the repo
 
-in-progress
+1. Fork this repo in github.
+2. In Microsoft Fabric, create a workspace.
+3. In the workspace settings, in the `Git integration` section, add a github account. You will need a `display name`, a `personal access token` and the `repo url` as shown in the screenshot below. For more information about github's tokens, see [Managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) in Github's official documentation.
 
+<p align="center">
+  <img src="resources/Github - Add account.png" alt="Add a github account" width="600"/>
+</p>
+<p align="center"><em>Figure 4: Add a github account</em></p>
+
+4. Use the newly created account to connect and configure the git integration as shown in the screenshot below (use the workspace folder of the repo).
+   
+<p align="center">
+  <img src="resources/Github - Connection.png" alt="Github connection" width="600"/>
+</p>
+<p align="center"><em>Figure 5: Github connection</em></p>
+
+5. Click on `Connect and sync`.
+6. Once the items have been synced to the workspace, you can either disconnect the Git integration or keep it enabled for future updates to the solution
+7. In your workspace, navigate to the `nb_monitoring_prepare_workspace` notebook located in the utilities folder and run it. This notebook updates the connections used by the Data Factory pipelines and correctly binds the main notebooks to the MonitoringLake in your workspace.
+8. Create a configuration (refer to the example in the resources folder), and use its name in pl_monitoring_master to run your first extraction.
