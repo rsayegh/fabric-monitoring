@@ -379,20 +379,47 @@ Each notebook extracts a specific set of data and writes it to the `MonitoringLa
 # How to use the repo
 
 1. Fork this repo in github.
-2. In Microsoft Fabric, create a workspace.
-3. In the workspace settings, in the `Git integration` section, add a github account. You will need a `display name`, a `personal access token` and the `repo url` as shown in the screenshot below. For more information about github's tokens, see [Managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) in Github's official documentation.
+2. In Microsoft Fabric, create a new cloud connection. The connection type should be "Fabric Data Pipelines".
+   
+<p align="center">
+  <img src="resources/Fabric - Data Factory Pipeline connection.png" alt="Create a Fabric Data Pipelines connection"/>
+</p>
+<p align="center"><em>Figure 4: Create a Fabric Data Pipelines connection</em></p>
+
+Once the connection created, click on its settings and note the connection id
+
+<p align="center">
+  <img src="resources/Fabric - Data Factory Pipeline connection id.png" alt="Get the Fabric Data Pipelines connection id"/>
+</p>
+<p align="center"><em>Figure 5: Get the Fabric Data Pipelines connection id</em></p>
+
+3. In the forked repository, go to the `workspace` folder and locate the `pl_monitoring_config` and `pl_monitoring_master` directories. For each directory:
+
+    - Open the `pipeline-content.json` file.
+    - Locate the `InvokePipeline` JSON node.
+    - Replace the connection (highlighted in the screenshot) with the connection ID from the previous step and commit the file.
+
+<p align="center">
+  <img src="resources/Replace connection id.png" alt="Replace the connection id"/>
+</p>
+<p align="center"><em>Figure 6: Replace the connection id</em></p>
+
+
+
+5. In Microsoft Fabric, create a workspace.
+6. In the workspace settings, in the `Git integration` section, add a github account. You will need a `display name`, a `personal access token` and the `repo url` as shown in the screenshot below. For more information about github's tokens, see [Managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) in Github's official documentation.
 
 <p align="center">
   <img src="resources/Github - Add account.png" alt="Add a github account" width="600"/>
 </p>
-<p align="center"><em>Figure 4: Add a github account</em></p>
+<p align="center"><em>Figure 7: Add a github account</em></p>
 
 4. Use the newly created account to connect and configure the git integration as shown in the screenshot below (use the workspace folder of the repo).
    
 <p align="center">
   <img src="resources/Github - Connection.png" alt="Github connection" width="600"/>
 </p>
-<p align="center"><em>Figure 5: Github connection</em></p>
+<p align="center"><em>Figure 8: Github connection</em></p>
 
 5. Click on `Connect and sync`.
 6. Once the items have been synced to the workspace, you can either disconnect the Git integration or keep it enabled for future updates to the solution
