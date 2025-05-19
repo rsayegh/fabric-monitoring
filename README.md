@@ -382,14 +382,14 @@ Each notebook extracts a specific set of data and writes it to the `MonitoringLa
 2. In Microsoft Fabric, create a new cloud connection. The connection type should be "Fabric Data Pipelines".
    
 <p align="center">
-  <img src="resources/Fabric - Data Factory Pipeline connection.png" alt="Create a Fabric Data Pipelines connection" width="600"/>
+  <img src="resources/Fabric - Data Factory Pipeline connection.png" alt="Create a Fabric Data Pipelines connection"/>
 </p>
 <p align="center"><em>Figure 4: Create a Fabric Data Pipelines connection</em></p>
 
 Once the connection created, click on its settings and note the connection id
 
 <p align="center">
-  <img src="resources/Fabric - Data Factory Pipeline connection id.png" alt="Get the Fabric Data Pipelines connection id" width="600"/>
+  <img src="resources/Fabric - Data Factory Pipeline connection id.png" alt="Get the Fabric Data Pipelines connection id"/>
 </p>
 <p align="center"><em>Figure 5: Get the Fabric Data Pipelines connection id</em></p>
 
@@ -398,13 +398,15 @@ Once the connection created, click on its settings and note the connection id
 For each directory:
 
 a. Open the `pipeline-content.json` file.
+
 b. Locate the `InvokePipeline` JSON node.
-c. Replace the connection (highlighted in the screenshot) with the connection ID from the previous step.
+
+c. Replace the connection (highlighted in the screenshot) with the connection ID from the previous step and commit the file.
 
 <p align="center">
-  <img src="resources/Fabric - Data Factory Pipeline connection id.png" alt="Get the Fabric Data Pipelines connection id" width="600"/>
+  <img src="resources/Replace connection id.png" alt="Replace the connection id"/>
 </p>
-<p align="center"><em>Figure 6: Get the Fabric Data Pipelines connection id</em></p>
+<p align="center"><em>Figure 6: Replace the connection id</em></p>
 
 
 
