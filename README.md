@@ -393,15 +393,11 @@ Once the connection created, click on its settings and note the connection id
 </p>
 <p align="center"><em>Figure 5: Get the Fabric Data Pipelines connection id</em></p>
 
-3. In the forked repository, go to the `workspace` folder and locate the `pl_monitoring_config` and `pl_monitoring_master` directories.
+3. In the forked repository, go to the `workspace` folder and locate the `pl_monitoring_config` and `pl_monitoring_master` directories. For each directory:
 
-For each directory:
-
-a. Open the `pipeline-content.json` file.
-
-b. Locate the `InvokePipeline` JSON node.
-
-c. Replace the connection (highlighted in the screenshot) with the connection ID from the previous step and commit the file.
+    - Open the `pipeline-content.json` file.
+    - Locate the `InvokePipeline` JSON node.
+    - Replace the connection (highlighted in the screenshot) with the connection ID from the previous step and commit the file.
 
 <p align="center">
   <img src="resources/Replace connection id.png" alt="Replace the connection id"/>
