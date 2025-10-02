@@ -35,12 +35,19 @@ import json
 
 # **Parameters --> convert to code for debugging the notebook. otherwise, keep commented as parameters are passed from master notebook**
 
-# MARKDOWN ********************
+# CELL ********************
 
-# pKeyVaultName = "rs-vault-dev"
-# pTenantId = "AzureTenantId"
-# pFabricSpnClientId = "FabricSpnId"
-# pFabricSpnSecret = "FabricSpnSecret"
+pKeyVaultName = "rs-vault-dev"
+pTenantId = "AzureTenantId"
+pFabricSpnClientId = "FabricSpnId"
+pFabricSpnSecret = "FabricSpnSecret"
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
 
 # MARKDOWN ********************
 

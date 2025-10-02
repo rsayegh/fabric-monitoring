@@ -75,15 +75,22 @@ vWorkspaceId = vContext["currentWorkspaceId"]
 
 # **Parameters --> convert to code for debugging the notebook. otherwise, keep commented as parameters are passed from master notebook**
 
-# MARKDOWN ********************
+# CELL ********************
 
-# pLoadId = "1"
-# pToken = ""
-# pDebugMode = "yes"
-# pAuditLogTimeframeInMinutes = "120"
-# pAllActivities = 'yes'
-# pInitialization =   'yes'
-# pDateAndTime = '2025-04-12 11:00:00'
+pLoadId = "1"
+pToken = ""
+pDebugMode = "yes"
+pAuditLogTimeframeInMinutes = "660"
+pAllActivities = 'yes'
+pInitialization =   'no'
+pDateAndTime = '2025-05-20 00:00:00'
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
 
 # MARKDOWN ********************
 
@@ -135,7 +142,7 @@ def extract_audit_logs(url, header, df, audit_date):
     # make the audit log dataframe global
     global df_audit_log
 
-    # set boolean vaule to continue to the next interval (in case response has a paging url)
+    # set boolean value to continue to the next interval (in case response has a paging url)
     vContinueToNextInterval = True
 
     # while loop the boolean is true
@@ -407,7 +414,7 @@ try:
     # convert to string
     df_audit_log[columns] = df_audit_log[columns].astype(str)
 
-    # iterate over the column name and rename after capitalizin the first letter
+    # iterate over the column name and rename after capitalizing the first letter
     for columnName in columns:
 
         # split the column name, take the last item and upper case the first letter

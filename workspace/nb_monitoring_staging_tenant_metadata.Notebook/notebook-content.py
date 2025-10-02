@@ -22,6 +22,63 @@
 
 # CELL ********************
 
+import pandas as pd
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+import sempy.fabric as fabric
+from synapse.ml.fabric.token_utils import TokenUtils
+
+def get_token(_="pbi"):    
+    return TokenUtils().get_aad_token()
+
+client = fabric.FabricRestClient(token_provider=get_token)
+
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+
+
+result = client.get("https://api.fabric.microsoft.com/v1/gateways")
+# result = client.get("https://api.powerbi.com/v1.0/myorg/gateways")
+
+df_items = pd.json_normalize(result.json()['value'])
+df_items
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+result
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
 # bronze configuration
 spark.conf.set("spark.sql.parquet.vorder.enabled","false")
 spark.conf.set("spark.databricks.delta.optimizeWrite.enabled","false")
@@ -75,11 +132,18 @@ vWorkspaceId = vContext["currentWorkspaceId"]
 
 # **Parameters --> convert to code for debugging the notebook. otherwise, keep commented as parameters are passed from master notebook**
 
-# MARKDOWN ********************
+# CELL ********************
 
-# pLoadId = "1"
-# pToken = ""
-# pDebugMode = "yes"
+pLoadId = "1"
+pToken = ""
+pDebugMode = "yes"
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
 
 # MARKDOWN ********************
 
@@ -91,7 +155,7 @@ vScope = "https://analysis.windows.net/powerbi/api"
 # get the access token 
 if pDebugMode == "yes":
     # in debug mode, use the token of the current user
-    vAccessToken  = notebookutils.credentials.getToken(vScope)
+    vAccessToken  = get_token #notebookutils.credentials.getToken(vScope)
 else:
     # when the code is run from the pipelines, to token is generated in a previous step and passed as a parameter to the notebook
     vAccessToken = pToken 
@@ -184,12 +248,12 @@ def get_extraction_url(extraction):
 # CELL ********************
 
 vExtractionList = [
-    "domains", 
-    "external_data_shares", 
-    "tenant_settings", 
-    "capacities", 
-    "connections", 
-    "deployment_pipelines", 
+    # "domains", 
+    # "external_data_shares", 
+    # "tenant_settings", 
+    # "capacities", 
+    # "connections", 
+    # "deployment_pipelines", 
     "gateways"
     ]
 
@@ -231,6 +295,17 @@ for item in vExtractionList:
         if pDebugMode == "yes":
             print(str(e))
     
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+df_gateways
 
 # METADATA ********************
 
@@ -417,6 +492,21 @@ except Exception as e:
     vMessage = f"saving logs to the lakehouse failed. exception: {str(e)}"
     if pDebugMode == "yes":
         print(vMessage)    
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# create the spark dataframe
+sparkDF = spark.createDataFrame(pandas_df) 
+
+# save to the lakehouse
+sparkDF.write.mode("overwrite").format("delta").option("mergeSchema", "true").saveAsTable("silver.my_table")
 
 # METADATA ********************
 
